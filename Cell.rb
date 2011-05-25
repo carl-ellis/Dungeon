@@ -19,9 +19,14 @@ class Cell
 
 	def to_s
 		char = ""
-		if @type == Cell::BLOCKED
-			char = "#"
-		else
+		case @type
+      when Cell::BLOCKED
+			  char = "#"
+      when Cell::PERIMETER
+        char = "P"
+      when Cell::ROOM
+        char = "R"
+      else
 			char = " "
 		end
     return char
