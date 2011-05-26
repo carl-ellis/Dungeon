@@ -26,6 +26,10 @@ class Cell
         char = "P"
       when Cell::ROOM
         char = "R"
+      when Cell::CORRIDOR
+        char = "C"
+      when Cell::ENTRANCE
+        char = "E"
       else
 			char = " "
 		end

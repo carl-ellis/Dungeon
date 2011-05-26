@@ -1,12 +1,14 @@
 #!/usr/bin/ruby
 
 require './Cell.rb'
+require './Direction.rb'
 
 class Dungeon
 
   ROOM_SIZE_WEIGHT = 0.10
   ROOM_ALLOCATION_WEIGHT = 0.15
   MAX_PLACEMENT_ITERATION = 10
+	ROOM_DOORS = 2.0 
 
 	attr_reader :width, :height
 	attr_accessor :cells
@@ -31,7 +33,9 @@ class Dungeon
 
 		# Generate rooms
     generate_rooms()
+
 		# Generate corridors
+		generate_corridors()
 	end
 
 	# Initialises the cell array with unallocated cells
@@ -116,12 +120,19 @@ class Dungeon
       
       # if checks ok, build the room and the perimeter
       if !failed
+				# Probability falls so there are an average of 2 doors per room
+				per = 2*(w+h)
+				door_chance = Dungeon::ROOM_DOORS/per
+
         (tli..tli+w+1).each do |i|
           (tlj..tlj+h+1).each do |j|
               @cells[i][j].type = Cell::ROOM
               @cells[i][j].room_id = room_id
-              @cells[i][j].type = Cell::PERIMETER if i == tli || i == tli+w+1
-              @cells[i][j].type = Cell::PERIMETER if j == tlj || j == tlj+h+1
+							# If perimeter wall, assign door if random number is under the threshold
+   						if i == tli || i == tli+w+1 || j == tlj || j == tlj+h+1  
+              @cells[i][j].type = Cell::PERIMETER 
+              @cells[i][j].type = Cell::ENTRANCE if rand < door_chance
+							end
           end
         end
         # Meet loop criterea
@@ -132,6 +143,50 @@ class Dungeon
     end
     
   end
+
+  # Generates corridors on all viable corridor seeds
+	# (odd (x,y)'s
+	def generate_corridors()
+		(0..width).each do |i|
+			(0..height).each do |j|
+				if i.odd? && j.odd? && @cells[i][j].type == Cell::UNALLOCATED
+					carve_corridors(i,j)
+				end
+			end
+		end
+	end
+
+	# Carve out corridor sections in every direction from a given
+	# (x,y)
+	#
+	# @params		i			Initial x coord
+	# @params 	j			Initial y coord
+	def carve_corridors(i,j)
+		dirs = Direction::DIRECTIONS.keys.shuffle
+
+		# Pick a random direction
+		dirs.each do |d_key|
+			#Check the next two squares in that direction
+			t_cells = [@cells[i][j]]
+			failed = false
+			(1..2).each do |step|
+				jump = Direction::DIRECTIONS[d_key]
+				if !t_cells[step-1].nil? && !failed
+					t_cells[step] = @cells[t_cells[step-1].x+jump[0]][t_cells[step-1].y+jump[1]] 
+					failed = true if t_cells[step].nil? || t_cells[step].type != Cell::UNALLOCATED
+				else
+					failed = true
+				end
+			end
+			# If unallocated, carve and start next section
+			if !failed
+				t_cells.each { |c| c.type = Cell::CORRIDOR }
+				l_cell = t_cells.last
+				carve_corridors(l_cell.x, l_cell.y)
+			end
+		end
+
+	end
 
 	# Output to console
 	def to_s
