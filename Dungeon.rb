@@ -2,6 +2,8 @@
 
 require './Cell.rb'
 require './Direction.rb'
+require './RoomBranch.rb'
+require './CorridorBranch.rb'
 
 class Dungeon
 
@@ -10,7 +12,7 @@ class Dungeon
   MAX_PLACEMENT_ITERATION = 10
 	ROOM_DOORS = 2.0 
 
-	attr_reader :width, :height
+	attr_reader :width, :height, :room_map, :corridor_map
 	attr_accessor :cells
 
 	# Generates the dungeon object
@@ -41,6 +43,8 @@ class Dungeon
 	# Initialises the cell array with unallocated cells
 	def initialise_cell_array
 		@cells = []
+		@room_map = {}
+		@corridor_map = {}
 		(0..width).each do |i|
 			@cells[i] = []
 			(0..height).each do |j|
@@ -124,6 +128,9 @@ class Dungeon
 				per = 2*(w+h)
 				door_chance = Dungeon::ROOM_DOORS/per
 
+				# Prep for building a logical object ready for dead end removal
+				room_cells = []
+
         (tli..tli+w+1).each do |i|
           (tlj..tlj+h+1).each do |j|
               @cells[i][j].type = Cell::ROOM
@@ -131,12 +138,22 @@ class Dungeon
 							# If perimeter wall, assign door if random number is under the threshold
    						if i == tli || i == tli+w+1 || j == tlj || j == tlj+h+1  
               @cells[i][j].type = Cell::PERIMETER 
-              @cells[i][j].type = Cell::ENTRANCE if rand < door_chance
+								if i.odd? || j.odd?
+		              @cells[i][j].type = Cell::ENTRANCE if rand < door_chance
+								end
 							end
+
+							# Store the room cells read for assignment to logical structure
+							room_cells << @cells[i][j];
           end
         end
         # Meet loop criterea
         c_try = Dungeon::MAX_PLACEMENT_ITERATION
+
+				# Build logical object and map entrance cells to the room
+				room_obj = RoomBranch.new(room_cells)
+				room_cells.each { |c| room_map[c] = room_obj if c.type == Cell::ENTRANCE }
+
       end
         
       c_try += 1
@@ -206,3 +223,4 @@ end
 print `clear`
 d = Dungeon.new(50,50)
 puts d.to_s
+
