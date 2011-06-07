@@ -167,7 +167,7 @@ class Dungeon
 		(0..width).each do |i|
 			(0..height).each do |j|
 				if i.odd? && j.odd? && @cells[i][j].type == Cell::UNALLOCATED
-					carve_corridors(i,j)
+					carve_corridors(i,j,nil)
 				end
 			end
 		end
@@ -178,7 +178,7 @@ class Dungeon
 	#
 	# @params		i			Initial x coord
 	# @params 	j			Initial y coord
-	def carve_corridors(i,j)
+	def carve_corridors(i,j, parent)
 		dirs = Direction::DIRECTIONS.keys.shuffle
 
 		# Pick a random direction
@@ -186,20 +186,46 @@ class Dungeon
 			#Check the next two squares in that direction
 			t_cells = [@cells[i][j]]
 			failed = false
+			corientrance = false
 			(1..2).each do |step|
 				jump = Direction::DIRECTIONS[d_key]
 				if !t_cells[step-1].nil? && !failed
 					t_cells[step] = @cells[t_cells[step-1].x+jump[0]][t_cells[step-1].y+jump[1]] 
-					failed = true if t_cells[step].nil? || t_cells[step].type != Cell::UNALLOCATED
+					failed = true if t_cells[step].nil? || t_cells[step].type != Cell::UNALLOCATED 
+					if !t_cells[step].nil? && t_cells[step].type == Cell::ENTRANCE  
+						corientrance = true 
+						failed = true
+						break
+					end
 				else
 					failed = true
 				end
 			end
 			# If unallocated, carve and start next section
 			if !failed
-				t_cells.each { |c| c.type = Cell::CORRIDOR }
+				# Create Corridor logical structure
+				corridor_obj = CorridorBranch.new(t_cells)
+				t_cells.each do |c| 
+					c.type = Cell::CORRIDOR 
+					corridor_map[c] = corridor_obj
+				end
+				# Add to corrdidor tree
+				parent.children << corridor_obj if !parent.nil?
+
 				l_cell = t_cells.last
-				carve_corridors(l_cell.x, l_cell.y)
+				carve_corridors(l_cell.x, l_cell.y,corridor_obj)
+			end
+			# special case for entrance corridor links
+			if corientrance
+				# Create Corridor logical structure
+				corridor_obj = CorridorBranch.new(t_cells)
+				t_cells.each do |c| 
+					corridor_map[c] = corridor_obj
+				end
+				l_cell = t_cells.last
+				# Add to corrdidor tree
+				parent.children << room_map[l_cell] if !parent.nil?
+				room_map[l_cell].children << parent if !parent.nil?
 			end
 		end
 
@@ -222,5 +248,5 @@ end
 
 print `clear`
 d = Dungeon.new(50,50)
-puts d.to_s
+
 
