@@ -10,7 +10,7 @@ class Dungeon
   ROOM_SIZE_WEIGHT = 0.10
   ROOM_ALLOCATION_WEIGHT = 0.15
   MAX_PLACEMENT_ITERATION = 10
-	ROOM_DOORS = 2.0 
+	ROOM_DOORS = 4.0 
 
 	attr_reader :width, :height, :room_map, :corridor_map
 	attr_accessor :cells
@@ -48,6 +48,7 @@ class Dungeon
 		@cells = []
 		@room_map = {}
 		@corridor_map = {}
+		@corridor_seeds = []
 		(0..width).each do |i|
 			@cells[i] = []
 			(0..height).each do |j|
@@ -235,9 +236,7 @@ class Dungeon
 
 	# go through the tree and trim off all branches without rooms
 	def trim_tree
-		corridor_map.keys.each do |c|
-		 check_branch(corridor_map[c])
-		end
+		check_branch(corridor_map[@cells[1][1]])
 	end
 
 	# Does this branch have a room on the end. if it doesn't remove the reference
@@ -247,21 +246,24 @@ class Dungeon
 	# @returns						If branch has a room
 	def check_branch(branch)
   	room = false
+		return room if branch.nil?
 
 		# Recurse through the tree to see if rooms exist
 		branch.children.each do |c|
 			t_room = check_branch(c)
 			if !t_room
-				branch.children.delete(c)
+				# If there is no room, remove the corridor
 				c.cells.each { |cell| cell.type = Cell::UNALLOCATED }
 			else
 				room = true if !room
-				branch.cells.each { |cell| cell.type = Cell::CORRIDOR }
 			end
 		end
 
-		room = branch.is_a?(RoomBranch) if !room
+		# Due to corridor overlap, this makes sure the corridor gets rebuilt when a lower branch is wiped
+		branch.cells.last.type = Cell::CORRIDOR if room 
 
+		# True if a room
+		room = branch.is_a?(RoomBranch) if !room
 
     return room
 	end
