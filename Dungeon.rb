@@ -38,6 +38,9 @@ class Dungeon
 
 		# Generate corridors
 		generate_corridors()
+
+		# Trim tree
+		trim_tree()
 	end
 
 	# Initialises the cell array with unallocated cells
@@ -225,10 +228,42 @@ class Dungeon
 				l_cell = t_cells.last
 				# Add to corrdidor tree
 				parent.children << room_map[l_cell] if !parent.nil?
-				room_map[l_cell].children << parent if !parent.nil?
 			end
 		end
 
+	end
+
+	# go through the tree and trim off all branches without rooms
+	def trim_tree
+		corridor_map.keys.each do |c|
+		 check_branch(corridor_map[c])
+		end
+	end
+
+	# Does this branch have a room on the end. if it doesn't remove the reference
+	#
+	# @params		branch		Branch you are checking
+	#
+	# @returns						If branch has a room
+	def check_branch(branch)
+  	room = false
+
+		# Recurse through the tree to see if rooms exist
+		branch.children.each do |c|
+			t_room = check_branch(c)
+			if !t_room
+				branch.children.delete(c)
+				c.cells.each { |cell| cell.type = Cell::UNALLOCATED }
+			else
+				room = true if !room
+				branch.cells.each { |cell| cell.type = Cell::CORRIDOR }
+			end
+		end
+
+		room = branch.is_a?(RoomBranch) if !room
+
+
+    return room
 	end
 
 	# Output to console
@@ -248,5 +283,6 @@ end
 
 print `clear`
 d = Dungeon.new(50,50)
+puts d
 
 
