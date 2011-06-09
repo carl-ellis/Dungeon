@@ -69,12 +69,19 @@ class Dungeon
 		end
 	end
 
+	# Gets the number of available cells for rooms
+	def get_allocated_cells
+		allocated_cells = 0.0;
+		@cells.each { |i| i.each { |j| allocated_cells += 1 if j.type != Cell::BLOCKED } }
+		return (allocated_cells*Dungeon::ROOM_ALLOCATION_WEIGHT).floor
+	end
+
   # Generates the rooms for the dungeon
   # There can only be a given number of rooms in the dungeon
   # Where the allocated space in a dungeon for rooms is area / room_weight
   def generate_rooms
 
-    allocated_cells = (@width*@height*Dungeon::ROOM_ALLOCATION_WEIGHT).floor
+    allocated_cells = get_allocated_cells
     taken_cells = 0
     room_id = 1
 
@@ -282,9 +289,4 @@ class Dungeon
 	end
 
 end
-
-print `clear`
-d = Dungeon.new(50,50)
-puts d
-
 
