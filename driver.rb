@@ -3,6 +3,6 @@
 require './CircularDungeon.rb'
 
 print `clear`
-d = Dungeon.new(50,50)
+d = CircularDungeon.new(50,50)
 puts d
 

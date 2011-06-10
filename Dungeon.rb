@@ -12,8 +12,8 @@ class Dungeon
   MAX_PLACEMENT_ITERATION = 10
 	ROOM_DOORS = 4.0 
 
-	attr_reader :width, :height, :room_map, :corridor_map
-	attr_accessor :cells
+	attr_reader :width, :height, :room_map, :corridor_map, :corridor_seeds
+	attr_accessor :cells                                                 
 
 	# Generates the dungeon object
 	# 
@@ -179,6 +179,7 @@ class Dungeon
 			(0..height).each do |j|
 				if i.odd? && j.odd? && @cells[i][j].type == Cell::UNALLOCATED
 					carve_corridors(i,j,nil)
+          @corridor_seeds << @cells[i][j]
 				end
 			end
 		end
@@ -243,7 +244,7 @@ class Dungeon
 
 	# go through the tree and trim off all branches without rooms
 	def trim_tree
-		check_branch(corridor_map[@cells[1][1]])
+		@corridor_seeds.each { |seed| check_branch(corridor_map[seed]) }
 	end
 
 	# Does this branch have a room on the end. if it doesn't remove the reference

@@ -54,3 +54,58 @@ Alloc: 375 Placed:379
 #      CPEPPPPP  C   C C       C   C         C C C#
 #      CCCCCCCCCCC   CCC       CCCCC         CCCCC#
 ###################################################
+
+Circular Dungeon output:
+
+Alloc: 293 Placed:296
+###################################################
+################## CCCCC CCC     ##################
+################       C C C       ################
+##############       CCC C CCCCCCCCC ##############
+############         C   C         C   ############
+##########           CCCCC CCCCC   CCCCC ##########
+#########     PPPPPPP   PPPEPC C       C  #########
+######## CCCCCPRRRRRPCCCPRRRPC CCCCC   C   ########
+####### PEPPPCPRRRRRPC CPRRRPCPEPPPC   C    #######
+######  PRRRPCPRRRRRPC CERRRPCPRRRPC CCC     ######
+#####   PRRRPCPPPEPPPC CPPPPPCPRRRPC C        #####
+#####   PRRRPCCCCCCCCC CCCCCCCPRRRPC C        #####
+####    PPPEPC        PEPPPC  PRRRPC C         ####
+####     CCC CCCCCCCCCPRRRPC  PRRRPC CCCCCCC   ####
+###      C CPPPPPPP  CPRRRPC  PPPEPC  PPPPPC    ###
+###CCC   C CPRRRRRECCCPRRRECCC   CCC  PRRRPC    ###
+## C C   C CPRRRRRPC  PRRRP  C   C    PRRRPC     ##
+## C CCCCC CERRRRRPC  PRRRECCC   CCCCCERRRPCCC   ##
+#  CPEPPPPPCPRRRRRPC  PPPPPCPPPPP    CPRRRP  C    #
+#CCCPRRRRRECPRRRRRPCCC     CPRRRP    CERRREC C CCC#
+#C  PRRRRRPCPEPPPPP  C     CPRRRP     PPPPPC C C C#
+#C  PRRRRRECCC       CCC CCCERRRP    CCCCCCC CCC C#
+#C  PPPPPPP            C C  PRRRP    C   CPPPPPPPC#
+#CCC CCCCC CCC     CCCCC CCCPRRRPCCCCC   CPRRRRRPC#
+#  C C   C C CPPPPPCPPPPP  CPPPPPC       CPRRRRRPC#
+#  C CCC CCC CPRRRPCPRRRP  CCCCCCC CCCCCCCERRRRRPC#
+#  C   C     CPRRRPCPRRRP          C      PEPPPPPC#
+#  CCCCC   CCCPRRRPCPRRRECCC CCC   C CCC   CCC CCC#
+#          C CPEPPPCPRRRPC C C C   C C C   C C C  #
+#        CCC C C CCCERRRPC CCC CCCCC C C   C C CCC#
+# PPPPPPPC   C C C  PPPPPCPPPPPPP    C C   C C   C#
+# PRRRRRPCCC CCC C   CCC CPRRRRRP  CCC CCC C CCCCC#
+# PRRRRRP  CPPPPPC   C C CPRRRRRP  C     C C      #
+##ERRRRRP  CPRRRPC CCC CCCPRRRRRPCCC     CCC     ##
+##PEPPPEP  CPRRRPC C     CPEPPPPPCPPPPPPP        ##
+###CCCCC   CPRRRPC CCCCC CCC   CCCPRRRRREC      ###
+###  C C   CPRRRPC     C       C  PRRRRRPC      ###
+#### C CCC CPRRRPC     C     CCC  PRRRRRPC     ####
+#### C   C CPPPEPC     C     C    PEPPPPPC     ####
+#####CCC CCC CCCCC     CCC   CCC CCCCC   CCC  #####
+#####  C     C           C     C C   C     C  #####
+###### CCC   C       CCC CCCCCCC CCC CCCCCCC ######
+#######  C   C       C CPPPPP      C        #######
+######## CCC C     CCC CPRRRP  CCCCC       ########
+#########  C C     C   CPRRRP  C          #########
+########## CCCCCCCCC CCCPRRRP  C         ##########
+############         C  PRRRP  C       ############
+##############       C  PRRRP  C     ##############
+################     C  PPPPP  C   ################
+##################   CCCCCCCCCCC ##################
+###################################################
