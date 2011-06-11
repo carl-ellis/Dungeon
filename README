@@ -1,6 +1,9 @@
 Dungeon generator based on the work at http://donjon.bin.sh/dungeon/about/
 
-Sample output:
+Sample SDL output:
+http://i.imgur.com/0tm2Q.png
+
+Sample console output:
 
 Alloc: 375 Placed:379
 ###################################################
