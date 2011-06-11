@@ -2,17 +2,19 @@ require 'rubygems'
 require 'sdl'     
 require './CircularDungeon'
 
-d = CircularDungeon.new(50,50)
+w = 80
+h = 80
+sf = 10
+
+d = CircularDungeon.new(w,h)
 c = d.cells
-h = d.height
-w = d.width
 puts "SDL output"
 puts "=========="
 
 running = true
 
 SDL::init(SDL::INIT_VIDEO)
-screen = SDL::setVideoMode(500,500,16,SDL::SWSURFACE)
+screen = SDL::setVideoMode(w*sf,w*sf, 16,SDL::SWSURFACE)
 
 CORRIDORCOLOUR = screen.format.mapRGB(255,255,255)
 BLOCKEDCOLOUR = screen.format.mapRGB(0,0,0)
@@ -40,7 +42,7 @@ while running
 				else
 					colour = BLOCKEDCOLOUR
 			end
-			screen.fill_rect(x*10,y*10,10,10,colour)
+			screen.fill_rect(x*sf,y*sf,sf,sf,colour)
 		end
 	end
 	
